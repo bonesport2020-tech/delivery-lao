@@ -3,56 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery Service</title>
+    <title>Delivery Lao - 020 96217353</title>
     <style>
-        body { font-family: 'Lao Sangam MN', 'Saysettha OT', sans-serif; padding: 20px; background-color: #f4f7f6; color: #333; }
-        .container { max-width: 500px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
-        h2 { text-align: center; color: #2ecc71; margin-bottom: 5px; }
-        h3 { color: #2c3e50; border-left: 5px solid #2ecc71; padding-left: 10px; margin-top: 0; }
-        .menu-item { display: flex; align-items: center; margin-bottom: 12px; }
-        .menu-item label { margin-left: 10px; cursor: pointer; flex-grow: 1; }
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #2ecc71; }
-        input[type="text"], textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .btn-send { background-color: #25D366; color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; margin-top: 10px; transition: 0.3s; }
-        .btn-send:hover { background-color: #128C7E; }
-        .price { font-weight: bold; color: #e67e22; }
+        body { font-family: 'Saysettha OT', sans-serif; background-color: #e9ecef; margin: 0; padding: 10px; }
+        .container { max-width: 500px; margin: auto; background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* Header */
+        .header { background-color: #2ecc71; color: white; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header p { margin: 5px 0 0; font-size: 16px; }
+
+        .section { padding: 20px; border-bottom: 8px solid #e9ecef; }
+        h3 { margin-top: 0; color: #333; display: flex; align-items: center; }
+
+        /* Menu Food Layout */
+        .food-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .food-card { text-align: center; background: #f8f9fa; padding: 10px; border-radius: 10px; border: 1px solid #ddd; position: relative; }
+        .food-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; }
+        .food-card p { font-size: 12px; margin: 5px 0; font-weight: bold; }
+        .food-card span { font-size: 11px; color: #e67e22; }
+        
+        /* Checkbox Custom */
+        .food-card input[type="checkbox"] { transform: scale(1.2); margin-top: 5px; cursor: pointer; }
+
+        /* Parcel Section */
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; resize: none; background: #f8f9fa; }
+
+        /* Customer Info */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+
+        /* Button */
+        .footer { padding: 20px; }
+        .btn-send { background-color: #25D366; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-send:hover { background-color: #1ebe57; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🚚 ບໍລິການສົ່ງດ່ວນ</h2>
-    <p style="text-align: center; font-size: 14px; color: #7f8c8d; margin-bottom: 20px;">ເບີຕິດຕໍ່: 020 96217353</p>
+    <div class="header">
+        <h1>🚚 ບໍລິການສົ່ງດ່ວນ</h1>
+        <p>📞 020 96217353</p>
+    </div>
 
-    <div class="card">
+    <div class="section">
         <h3>1. ສັ່ງອາຫານ 🍔</h3>
-        <div class="menu-item">
-            <input type="checkbox" id="f1" class="food-item" data-name="ເຂົ້າຜັດໝູ" data-price="25000">
-            <label for="f1">ເຂົ້າຜັດໝູ <span class="price">(25,000 ກີບ)</span></label>
-        </div>
-        <div class="menu-item">
-            <input type="checkbox" id="f2" class="food-item" data-name="ຕຳໝາກຮຸ່ງ" data-price="20000">
-            <label for="f2">ຕຳໝາກຮຸ່ງ <span class="price">(20,000 ກີບ)</span></label>
-        </div>
-        <div class="menu-item">
-            <input type="checkbox" id="f3" class="food-item" data-name="ນ້ຳໝາກໄມ້ປັ່ນ" data-price="15000">
-            <label for="f3">ນ້ຳໝາກໄມ້ປັ່ນ <span class="price">(15,000 ກີບ)</span></label>
+        <div class="food-grid">
+            <div class="food-card">
+                <img src="https://img.freepik.com/free-photo/fried-rice-with-minced-pork-shale-white-plate_1150-24403.jpg" alt="ເຂົ້າຜັດໝູ">
+                <p>ເຂົ້າຜັດໝູ</p>
+                <span>25,000 ກີບ</span><br>
+                <input type="checkbox" class="food-item" data-name="ເຂົ້າຜັດໝູ" data-price="25000">
+            </div>
+            <div class="food-card">
+                <img src="https://img.freepik.com/free-photo/som-tum-thai-papaya-salad-white-plate_1150-26413.jpg" alt="ຕຳໝາກຮຸ່ງ">
+                <p>ຕຳໝາກຮຸ່ງ</p>
+                <span>20,000 ກີບ</span><br>
+                <input type="checkbox" class="food-item" data-name="ຕຳໝາກຮຸ່ງ" data-price="20000">
+            </div>
+            <div class="food-card">
+                <img src="https://img.freepik.com/free-photo/fresh-orange-juice-glass_1150-21010.jpg" alt="ນ້ຳໝາກໄມ້ປັ່ນ">
+                <p>ນ້ຳໝາກໄມ້ປັ່ນ</p>
+                <span>15,000 ກີບ</span><br>
+                <input type="checkbox" class="food-item" data-name="ນ້ຳໝາກໄມ້ປັ່ນ" data-price="15000">
+            </div>
         </div>
     </div>
 
-    <div class="card">
+    <div class="section">
         <h3>2. ຝາກພັດສະດຸ ແລະ ຮັບ 📦</h3>
         <textarea id="parcelDetail" rows="3" placeholder="ລະບຸລາຍລະອຽດເຄື່ອງທີ່ຈະຝາກ ຫຼື ໃຫ້ໄປຮັບ..."></textarea>
     </div>
 
-    <div class="card">
+    <div class="section" style="border-bottom: none;">
         <h3>📍 ຂໍ້ມູນບ່ອນສົ່ງ</h3>
-        <input type="text" id="custName" placeholder="ຊື່ລູກຄ້າ">
-        <input type="text" id="custAddress" placeholder="ບ້ານ, ເມືອງ ຫຼື ຈຸດນັດພົບ">
+        <div class="info-grid">
+            <input type="text" id="custName" placeholder="ຊື່ລູກຄ້າ">
+            <input type="text" id="custAddress" placeholder="ບ້ານ, ເມືອງ, ຈຸດນັດພົບ">
+        </div>
     </div>
 
-    <button class="btn-send" onclick="sendToWhatsApp()">📲 ສົ່ງລາຍການໄປທີ່ WhatsApp</button>
+    <div class="footer">
+        <button class="btn-send" onclick="sendToWhatsApp()">
+            📲 ສັ່ງລາຍການຜ່ານ WhatsApp
+        </button>
+    </div>
 </div>
 
 <script>
