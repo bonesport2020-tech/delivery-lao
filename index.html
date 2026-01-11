@@ -3,45 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ລະບົບສັ່ງອາຫານ ແລະ ສົ່ງເຄື່ອງ</title>
+    <title>Delivery Service</title>
     <style>
-        body { font-family: 'Lao Sangam MN', 'Saysettha OT', sans-serif; padding: 20px; background-color: #f9f9f9; color: #333; }
+        body { font-family: 'Lao Sangam MN', 'Saysettha OT', sans-serif; padding: 20px; background-color: #f4f7f6; color: #333; }
         .container { max-width: 500px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #25D366; }
-        .menu-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        .menu-item label { flex-grow: 1; margin-left: 10px; cursor: pointer; }
-        input[type="checkbox"] { transform: scale(1.5); }
-        input[type="text"], textarea { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn-send { background-color: #25D366; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #2ecc71; margin-bottom: 5px; }
+        h3 { color: #2c3e50; border-left: 5px solid #2ecc71; padding-left: 10px; margin-top: 0; }
+        .menu-item { display: flex; align-items: center; margin-bottom: 12px; }
+        .menu-item label { margin-left: 10px; cursor: pointer; flex-grow: 1; }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #2ecc71; }
+        input[type="text"], textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .btn-send { background-color: #25D366; color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; margin-top: 10px; transition: 0.3s; }
         .btn-send:hover { background-color: #128C7E; }
-        .price { font-weight: bold; color: #555; }
+        .price { font-weight: bold; color: #e67e22; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🚚 ບໍລິການສົ່ງດ່ວນ (ຊື່ຮ້ານຂອງທ່ານ)</h2>
+    <h2>🚚 ບໍລິການສົ່ງດ່ວນ</h2>
+    <p style="text-align: center; font-size: 14px; color: #7f8c8d; margin-bottom: 20px;">ເບີຕິດຕໍ່: 020 96217353</p>
 
     <div class="card">
-        <h3>🍔 ເລືອກລາຍການອາຫານ</h3>
+        <h3>1. ສັ່ງອາຫານ 🍔</h3>
         <div class="menu-item">
-            <input type="checkbox" id="food1" class="food-item" data-name="ເຂົ້າຜັດໝູ" data-price="25000">
-            <label for="food1">ເຂົ້າຜັດໝູ <span class="price">(25,000 ກີບ)</span></label>
+            <input type="checkbox" id="f1" class="food-item" data-name="ເຂົ້າຜັດໝູ" data-price="25000">
+            <label for="f1">ເຂົ້າຜັດໝູ <span class="price">(25,000 ກີບ)</span></label>
         </div>
         <div class="menu-item">
-            <input type="checkbox" id="food2" class="food-item" data-name="ຕຳໝາກຮຸ່ງ" data-price="20000">
-            <label for="food2">ຕຳໝາກຮຸ່ງ <span class="price">(20,000 ກີບ)</span></label>
+            <input type="checkbox" id="f2" class="food-item" data-name="ຕຳໝາກຮຸ່ງ" data-price="20000">
+            <label for="f2">ຕຳໝາກຮຸ່ງ <span class="price">(20,000 ກີບ)</span></label>
         </div>
         <div class="menu-item">
-            <input type="checkbox" id="food3" class="food-item" data-name="ນ້ຳໝາກໄມ້ປັ່ນ" data-price="15000">
-            <label for="food3">ນ້ຳໝາກໄມ້ປັ່ນ <span class="price">(15,000 ກີບ)</span></label>
+            <input type="checkbox" id="f3" class="food-item" data-name="ນ້ຳໝາກໄມ້ປັ່ນ" data-price="15000">
+            <label for="f3">ນ້ຳໝາກໄມ້ປັ່ນ <span class="price">(15,000 ກີບ)</span></label>
         </div>
     </div>
 
     <div class="card">
-        <h3>📦 ບໍລິການສົ່ງເຄື່ອງ / ຝາກເຄື່ອງ</h3>
-        <textarea id="parcelDetail" placeholder="ບອກລາຍລະອຽດເຄື່ອງ ຫຼື ບ່ອນທີ່ຈະໃຫ້ໄປຮັບ..."></textarea>
+        <h3>2. ຝາກພັດສະດຸ ແລະ ຮັບ 📦</h3>
+        <textarea id="parcelDetail" rows="3" placeholder="ລະບຸລາຍລະອຽດເຄື່ອງທີ່ຈະຝາກ ຫຼື ໃຫ້ໄປຮັບ..."></textarea>
     </div>
 
     <div class="card">
@@ -50,15 +52,12 @@
         <input type="text" id="custAddress" placeholder="ບ້ານ, ເມືອງ ຫຼື ຈຸດນັດພົບ">
     </div>
 
-    <button class="btn-send" onclick="sendToWhatsApp()">📱 ສົ່ງລາຍການຜ່ານ WhatsApp</button>
+    <button class="btn-send" onclick="sendToWhatsApp()">📲 ສົ່ງລາຍການໄປທີ່ WhatsApp</button>
 </div>
 
 <script>
     function sendToWhatsApp() {
-        // --- !!! ແກ້ໄຂເບີໂທຂອງທ່ານຢູ່ບ່ອນນີ້ (ເລີ່ມດ້ວຍ 856 ແລະ ຕັດ 0 ທາງໜ້າອອກ) !!! ---
-        // ຕົວຢ່າງ: ເບີ 020 55555555 ໃຫ້ໃສ່ 8562055555555
         var myNumber = "8562096217353"; 
-
         var name = document.getElementById('custName').value;
         var address = document.getElementById('custAddress').value;
         var parcel = document.getElementById('parcelDetail').value;
@@ -68,36 +67,34 @@
         var checkboxes = document.querySelectorAll('.food-item:checked');
         
         checkboxes.forEach((cb) => {
-            selectedFood.push(cb.getAttribute('data-name') + " (" + cb.getAttribute('data-price') + " ກີບ)");
+            selectedFood.push(cb.getAttribute('data-name') + " (" + parseInt(cb.getAttribute('data-price')).toLocaleString() + " ກີບ)");
             totalPrice += parseInt(cb.getAttribute('data-price'));
         });
 
         if (name == "" || (selectedFood.length == 0 && parcel == "")) {
-            alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນກ່ອນ");
+            alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນກ່ອນເດີ້!");
             return;
         }
 
-        // ຈັດຮູບແບບຂໍ້ຄວາມ
         var message = "📦 *ມີລາຍການສັ່ງໃໝ່!*" + "%0a%0a";
-        message += "*ຊື່ລູກຄ້າ:* " + name + "%0a";
-        message += "*ບ່ອນສົ່ງ:* " + address + "%0a%0a";
+        message += "👤 *ລູກຄ້າ:* " + name + "%0a";
+        message += "📍 *ບ່ອນສົ່ງ:* " + address + "%0a%0a";
         
         if (selectedFood.length > 0) {
-            message += "*ລາຍການອາຫານ:*%0a- " + selectedFood.join("%0a- ") + "%0a";
-            message += "*ລາຄາລວມ:* " + totalPrice.toLocaleString() + " ກີບ%0a%0a";
+            message += "🍴 *1. ສັ່ງອາຫານ:*%0a- " + selectedFood.join("%0a- ") + "%0a";
+            message += "💰 *ລວມລາຄາອາຫານ:* " + totalPrice.toLocaleString() + " ກີບ%0a%0a";
         }
         
         if (parcel != "") {
-            message += "*ລາຍລະອຽດເຄື່ອງ:* " + parcel + "%0a%0a";
+            message += "📦 *2. ຝາກພັດສະດຸ/ຮັບ:*%0a" + parcel + "%0a%0a";
         }
 
+        message += "--------------------------%0a";
         message += "_(ລໍຖ້າການຢືນຢັນຄ່າສົ່ງຈາກຄົນຂັບ)_";
 
-        var url = "https://wa.me/" + myNumber + "?text=" + message;
-        window.open(url, '_blank').focus();
+        window.open("https://wa.me/" + myNumber + "?text=" + message, '_blank').focus();
     }
 </script>
 
 </body>
-
 </html>
