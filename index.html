@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>อิ่มด่วน — สั่งอาหาร</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap');
+
+  :root {
+    --cream: #FBF7EF;
+    --paper: #FFFFFF;
+    --ink: #24302A;
+    --ink-soft: #5B6660;
+    --chili: #C7402C;
+    --line: #E4DACB;
+    --whatsapp: #25D366;
+    --whatsapp-dark: #1DA851;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); font-family: 'Sarabun', sans-serif; color: var(--ink); }
+
+  header { background: var(--ink); border-bottom: 4px solid var(--chili); padding: 20px 24px; }
+  header .inner { max-width: 720px; margin: 0 auto; }
+  header h1 { font-family: 'Kanit', sans-serif; color: #fff; font-size: 22px; margin: 0; }
+  header p { color: #C7D0CA; font-size: 13px; margin: 4px 0 0; }
+
+  main { max-width: 720px; margin: 0 auto; padding: 24px; }
+  h2 { font-family: 'Kanit', sans-serif; font-size: 18px; margin: 0 0 12px; }
+
+  .category-label { font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: 600; color: var(--chili); margin: 18px 0 8px; }
+  .category-label:first-child { margin-top: 0; }
+  .menu-item { display: flex; align-items: center; justify-content: space-between; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .menu-item .name { font-weight: 500; font-size: 15px; }
+  .menu-item .price { font-size: 13px; color: var(--ink-soft); }
+
+  .qty-control { display: flex; align-items: center; gap: 8px; }
+  .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); font-size: 16px; font-weight: bold; cursor: pointer; color: var(--ink); }
+  .qty-btn.add { background: var(--chili); color: #fff; border: none; }
+  .qty-val { width: 18px; text-align: center; font-size: 14px; }
+
+  .cart-box, .form-box { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-top: 24px; }
+  .cart-line { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
+  .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; border-top: 1px dashed var(--line); margin-top: 8px; padding-top: 8px; }
+  .empty-note { color: var(--ink-soft); font-size: 13px; text-align: center; padding: 12px 0; }
+
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-soft); margin: 12px 0 4px; }
+  label:first-child { margin-top: 0; }
+  input, textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--ink); outline: none; }
+  input:focus, textarea:focus { border-color: var(--chili); }
+  textarea { resize: vertical; min-height: 60px; }
+
+  .submit-btn { width: 100%; margin-top: 16px; padding: 13px; border-radius: 10px; border: none; background: var(--whatsapp); color: #fff; font-family: 'Sarabun', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .submit-btn:hover { background: var(--whatsapp-dark); }
+  .submit-btn:disabled { background: #B7BDB9; cursor: not-allowed; }
+
+  .error-note { color: var(--chili); font-size: 13px; margin-top: 8px; display: none; }
+  .loading-note { color: var(--ink-soft); font-size: 13px; text-align: center; padding: 20px 0; }
+  footer { text-align: center; font-size: 12px; color: var(--ink-soft); padding: 24px; }
+  footer a { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <h1>🍱 อิ่มด่วน</h1>
+    <p>สั่งแล้วออเดอร์ส่งตรงไปหาไรเดอร์ทาง WhatsApp</p>
+  </div>
+</header>
+
+<main>
+  <h2>เมนู</h2>
+  <div id="menu-list"><div class="loading-note">กำลังโหลดเมนู...</div></div>
+
+  <div class="cart-box">
+    <h2 style="margin-bottom:8px;">ตะกร้า</h2>
+    <div id="cart-summary"><div class="empty-note">ยังไม่ได้เลือกเมนู</div></div>
+  </div>
+
+  <div class="form-box">
+    <h2>ข้อมูลจัดส่ง</h2>
+    <label for="cust-name">ชื่อผู้สั่ง</label>
+    <input id="cust-name" type="text" placeholder="เช่น คุณสมชาย" />
+
+    <label for="cust-phone">เบอร์โทรติดต่อ</label>
+    <input id="cust-phone" type="tel" placeholder="เช่น 0891234567" />
+
+    <label for="cust-address">ที่อยู่จัดส่ง</label>
+    <textarea id="cust-address" placeholder="บ้านเลขที่ ถนน ตำบล/แขวง..."></textarea>
+
+    <label for="cust-note">หมายเหตุ (ถ้ามี)</label>
+    <input id="cust-note" type="text" placeholder="เช่น ไม่ใส่ผัก, เผ็ดน้อย" />
+
+    <div class="error-note" id="error-note">กรุณาเลือกเมนูอย่างน้อย 1 รายการ และกรอกชื่อ เบอร์โทร ที่อยู่ให้ครบ</div>
+
+    <button class="submit-btn" id="submit-btn" onclick="sendOrder()">
+      📲 สั่งอาหารทาง WhatsApp
+    </button>
+  </div>
+</main>
+
+<footer>ร้านของเราเอง · เมนูอัปเดตสดจากระบบหลังบ้าน</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+  let MENU = [];
+  const cart = {};
+  let riderPhoneTH = "";
+
+  db.collection("menu").orderBy("name").onSnapshot(snapshot => {
+    MENU = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    MENU.sort((a, b) => (a.category || "").localeCompare(b.category || "") || a.name.localeCompare(b.name));
+    renderMenu();
+    renderCart();
+  }, err => {
+    document.getElementById("menu-list").innerHTML =
+      '<div class="empty-note">โหลดเมนูไม่สำเร็จ ลองรีเฟรชหน้าใหม่</div>';
+    console.error(err);
+  });
+
+  db.collection("settings").
