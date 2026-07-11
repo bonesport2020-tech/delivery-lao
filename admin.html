@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>อิ่มด่วน — จัดการร้าน</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap');
+
+  :root {
+    --cream: #FBF7EF;
+    --paper: #FFFFFF;
+    --ink: #24302A;
+    --ink-soft: #5B6660;
+    --chili: #C7402C;
+    --sage: #6E8B74;
+    --sage-dark: #4F6A55;
+    --line: #E4DACB;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); font-family: 'Sarabun', sans-serif; color: var(--ink); }
+
+  header { background: var(--ink); border-bottom: 4px solid var(--chili); padding: 20px 24px; }
+  header .inner { max-width: 640px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-family: 'Kanit', sans-serif; color: #fff; font-size: 20px; margin: 0; }
+  #logout-btn { display: none; background: transparent; border: 1px solid #4b5750; color: #C7D0CA; padding: 6px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 24px; }
+  h2 { font-family: 'Kanit', sans-serif; font-size: 17px; margin: 0 0 12px; }
+
+  .box { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-soft); margin: 10px 0 4px; }
+  label:first-child { margin-top: 0; }
+  input { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--ink); outline: none; }
+  input:focus { border-color: var(--chili); }
+
+  .btn { padding: 10px 16px; border-radius: 8px; border: none; font-family: 'Sarabun', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; }
+  .btn-primary { background: var(--chili); color: #fff; }
+  .btn-sage { background: var(--sage); color: #fff; }
+  .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn-block { width: 100%; margin-top: 12px; }
+  .btn:hover { opacity: 0.88; }
+
+  .category-label { font-family: 'Kanit', sans-serif; font-size: 13px; font-weight: 600; color: var(--chili); margin: 14px 0 6px; }
+  .category-label:first-child { margin-top: 0; }
+  .menu-row { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .menu-row .name { font-weight: 500; font-size: 14px; }
+  .menu-row .price { font-size: 13px; color: var(--ink-soft); }
+  .menu-row .actions { display: flex; gap: 6px; }
+  .menu-row .actions button { font-size: 12px; padding: 5px 10px; }
+
+  .empty-note { color: var(--ink-soft); font-size: 13px; text-align: center; padding: 12px 0; }
+  .error-note { color: var(--chili); font-size: 13px; margin-top: 8px; }
+  .saved-note { color: var(--sage-dark); font-size: 13px; margin-top: 8px; display: none; }
+
+  #login-screen { max-width: 360px; margin: 60px auto; padding: 24px; }
+  #app-screen { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <h1>🍱 จัดการร้าน</h1>
+    <button id="logout-btn" onclick="doLogout()">ออกจากระบบ</button>
+  </div>
+</header>
+
+<div id="login-screen" class="box">
+  <h2>เข้าสู่ระบบแอดมิน</h2>
+  <label for="login-email">อีเมล</label>
+  <input id="login-email" type="email" placeholder="you@example.com" />
+  <label for="login-password">รหัสผ่าน</label>
+  <input id="login-password" type="password" placeholder="••••••••" />
+  <div class="error-note" id="login-error" style="display:none;"></div>
+  <button class="btn btn-primary btn-block" onclick="doLogin()">เข้าสู่ระบบ</button>
+</div>
+
+<main id="app-screen">
+  <div class="box">
+    <h2>เบอร์ WhatsApp ไรเดอร์</h2>
+    <label for="rider-phone">เบอร์ไทย (เช่น 0812345678)</label>
+    <input id="rider-phone" type="tel" placeholder="0812345678" />
+    <button class="btn btn-sage btn-block" onclick="saveRiderPhone()">บันทึกเบอร์</button>
+    <div class="saved-note" id="rider-saved-note">บันทึกแล้ว ✓</div>
+  </div>
+
+  <div class="box">
+    <h2>เพิ่มเมนูใหม่</h2>
+    <label for="new-name">ชื่อเมนู</label>
+    <input id="new-name" type="text" placeholder="เช่น ผัดกะเพราหมูสับ" />
+    <label for="new-category">ประเภทอาหาร</label>
+    <input id="new-category" type="text" list="category-options" placeholder="เช่น กับข้าว, เครื่องดื่ม, ของหวาน" />
+    <datalist id="category-options"></datalist>
+    <label for="new-price">ราคา (บาท)</label>
+    <input id="new-price" type="number" placeholder="เช่น 50" />
+    <div class="error-note" id="add-error" style="display:none;"></div>
+    <button class="btn btn-primary btn-block" onclick="addMenuItem()">+ เพิ่มเมนู</button>
+  </div>
+
+  <div class="box">
+    <h2>เมนูทั้งหมด</h2>
+    <div id="menu-manage-list"><div class="empty-note">กำลังโหลด...</div></div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+  let MENU = [];
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("app-screen").style.display = "block";
+      document.getElementById("logout-btn").style.display = "inline-block";
+      startListeners();
+    } else {
+      document.getElementById("login-screen").style.display = "block";
+      document.getElementById("app-screen").style.display = "none";
+      document.getElementById("logout-btn").style.display = "none";
+    }
+  });
+
+  function doLogin() {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    const errEl = document.getElementById("login-error");
+    errEl.style.display = "none";
+    auth.signInWithEmailAndPassword(email, password).catch(err => {
+      errEl.textContent = "เข้าสู่ระบบไม่สำเร็จ: อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+      errEl.style.display = "block";
+    });
+  }
+
+  function doLogout() {
+    auth.signOut();
+  }
+
+  function startListeners() {
+    db.collection("menu").orderBy("name").onSnapshot(snapshot => {
+      MENU = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      MENU.sort((a, b) => (a.category || "").localeCompare(b.category || "") || a.name.localeCompare(b.name));
+      renderMenuManage();
+      renderCategoryOptions();
+    });
+
+    db.collection("settings").doc("general").onSnapshot(doc => {
+      const phoneEl = document.getElementById("rider-phone");
+      if (doc.exists && document.activeElement !== phoneEl) {
+        phoneEl.value = doc.data().riderPhone || "";
+      }
+    });
+  }
+
+  function renderMenuManage() {
+    const el = document.getElementById("menu-manage-list");
+    if (MENU.length === 0) {
+      el.innerHTML = '<div class="empty-note">ยังไม่มีเมนู เพิ่มด้านบนได้เลย</div>';
+      return;
+    }
+    const groups = {};
+    MENU.forEach(item => {
+      const cat = item.category || "ไม่ระบุประเภท";
+      (groups[cat] = groups[cat] || []).push(item);
+    });
+    el.innerHTML = Object.keys(groups).map(cat => `
+      <div class="category-label">${escapeHtml(cat)}</div>
+      ${groups[cat].map(item => `
+        <div class="menu-row">
+          <div>
+            <div class="name">${escapeHtml(item.name)}</div>
+            <div class="price">${item.price}.-</div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-ghost" onclick="editMenuItem('${item.id}', '${escapeAttr(item.name)}', ${item.price}, '${escapeAttr(item.category || "")}')">แก้ไข</button>
+            <button class="btn btn-ghost" onclick="deleteMenuItem('${item.id}')">ลบ</button>
+          </div>
+        </div>
+      `).join("")}
+    `).join("");
+  }
+
+  function renderCategoryOptions() {
+    const categories = [...new Set(MENU.map(m => m.category).filter(Boolean))];
+    document.getElementById("category-options").innerHTML =
+      categories.map(c => `<option value="${escapeAttr(c)}"></option>`).join("");
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement("div");
+    d.textContent = str;
+    return d.innerHTML;
+  }
+  function escapeAttr(str) {
+    return String(str).replace(/'/g, "\\'");
+  }
+
+  function addMenuItem() {
+    const nameEl = document.getElementById("new-name");
+    const categoryEl = document.getElementById("new-category");
+    const priceEl = document.getElementById("new-price");
+    const errEl = document.getElementById("add-error");
+    const name = nameEl.value.trim();
+    const category = categoryEl.value.trim();
+    const price = parseFloat(priceEl.value);
+
+    if (!name || isNaN(price) || price < 0) {
+      errEl.textContent = "กรุณากรอกชื่อเมนูและราคาให้ถูกต้อง";
+      errEl.style.display = "block";
+      return;
+    }
+    errEl.style.display = "none";
+
+    db.collection("menu").add({ name, category, price, createdAt: Date.now() })
+      .then(() => { nameEl.value = ""; categoryEl.value = ""; priceEl.value = ""; })
+      .catch(err => {
+        errEl.textContent = "บันทึกไม่สำเร็จ: " + err.message;
+        errEl.style.display = "block";
+      });
+  }
+
+  function editMenuItem(id, currentName, currentPrice, currentCategory) {
+    const name = prompt("ชื่อเมนู", currentName);
+    if (name === null) return;
+    const category = prompt("ประเภทอาหาร", currentCategory || "");
+    if (category === null) return;
+    const priceStr = prompt("ราคา", currentPrice);
+    if (priceStr === null) return;
+    const price = parseFloat(priceStr);
+    if (!name.trim() || isNaN(price) || price < 0) {
+      alert("ข้อมูลไม่ถูกต้อง ยกเลิกการแก้ไข");
+      return;
+    }
+    db.collection("menu").doc(id).update({ name: name.trim(), category: category.trim(), price });
+  }
+
+  function deleteMenuItem(id) {
+    if (confirm("ต้องการลบเมนูนี้ใช่ไหม?")) {
+      db.collection("menu").doc(id).delete();
+    }
+  }
+
+  function saveRiderPhone() {
+    const phone = document.getElementById("rider-phone").value.trim();
+    const savedNote = document.getElementById("rider-saved-note");
+    db.collection("settings").doc("general").set({ riderPhone: phone }, { merge: true })
+      .then(() => {
+        savedNote.style.display = "block";
+        setTimeout(() => { savedNote.style.display = "none"; }, 2000);
+      });
+  }
+</script>
+</body>
+</html>
