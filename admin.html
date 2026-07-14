@@ -42,9 +42,12 @@
   .btn-block { width: 100%; margin-top: 12px; }
   .btn:hover { opacity: 0.88; }
 
-  .category-label { font-family: 'Kanit', sans-serif; font-size: 13px; font-weight: 600; color: var(--chili); margin: 14px 0 6px; }
+  .category-label { display: inline-block; font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 600; color: #fff; background: var(--chili); padding: 3px 12px; border-radius: 999px; margin: 16px 0 8px; }
   .category-label:first-child { margin-top: 0; }
-  .menu-row { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .menu-row { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; gap: 10px; }
+  .menu-row .item-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .menu-row .thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: var(--cream); }
+  .menu-row .thumb-placeholder { width: 44px; height: 44px; border-radius: 8px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   .menu-row .name { font-weight: 500; font-size: 14px; }
   .menu-row .price { font-size: 13px; color: var(--ink-soft); }
   .menu-row .actions { display: flex; gap: 6px; }
@@ -80,8 +83,8 @@
 <main id="app-screen">
   <div class="box">
     <h2>เบอร์ WhatsApp ไรเดอร์</h2>
-    <label for="rider-phone">เบอร์ลาว (เช่น 0812345678)</label>
-    <input id="rider-phone" type="tel" placeholder="0812345678" />
+    <label for="rider-phone">เบอร์ลาว (เช่น 02012345678)</label>
+    <input id="rider-phone" type="tel" placeholder="02012345678" />
     <button class="btn btn-sage btn-block" onclick="saveRiderPhone()">บันทึกเบอร์</button>
     <div class="saved-note" id="rider-saved-note">บันทึกแล้ว ✓</div>
   </div>
@@ -95,6 +98,8 @@
     <datalist id="category-options"></datalist>
     <label for="new-price">ราคา (บาท)</label>
     <input id="new-price" type="number" placeholder="เช่น 50" />
+    <label for="new-image">ลิงก์รูปภาพ (ไม่บังคับ)</label>
+    <input id="new-image" type="url" placeholder="https://..." />
     <div class="error-note" id="add-error" style="display:none;"></div>
     <button class="btn btn-primary btn-block" onclick="addMenuItem()">+ เพิ่มเมนู</button>
   </div>
@@ -171,12 +176,17 @@
       <div class="category-label">${escapeHtml(cat)}</div>
       ${groups[cat].map(item => `
         <div class="menu-row">
-          <div>
-            <div class="name">${escapeHtml(item.name)}</div>
-            <div class="price">${item.price}.-</div>
+          <div class="item-info">
+            ${item.imageUrl
+              ? `<img class="thumb" src="${escapeAttr(item.imageUrl)}" alt="${escapeAttr(item.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'thumb-placeholder',textContent:'🍽️'}))" />`
+              : `<div class="thumb-placeholder">🍽️</div>`}
+            <div>
+              <div class="name">${escapeHtml(item.name)}</div>
+              <div class="price">${item.price}.-</div>
+            </div>
           </div>
           <div class="actions">
-            <button class="btn btn-ghost" onclick="editMenuItem('${item.id}', '${escapeAttr(item.name)}', ${item.price}, '${escapeAttr(item.category || "")}')">แก้ไข</button>
+            <button class="btn btn-ghost" onclick="editMenuItem('${item.id}', '${escapeAttr(item.name)}', ${item.price}, '${escapeAttr(item.category || "")}', '${escapeAttr(item.imageUrl || "")}')">แก้ไข</button>
             <button class="btn btn-ghost" onclick="deleteMenuItem('${item.id}')">ลบ</button>
           </div>
         </div>
@@ -203,10 +213,12 @@
     const nameEl = document.getElementById("new-name");
     const categoryEl = document.getElementById("new-category");
     const priceEl = document.getElementById("new-price");
+    const imageEl = document.getElementById("new-image");
     const errEl = document.getElementById("add-error");
     const name = nameEl.value.trim();
     const category = categoryEl.value.trim();
     const price = parseFloat(priceEl.value);
+    const imageUrl = imageEl.value.trim();
 
     if (!name || isNaN(price) || price < 0) {
       errEl.textContent = "กรุณากรอกชื่อเมนูและราคาให้ถูกต้อง";
@@ -215,27 +227,29 @@
     }
     errEl.style.display = "none";
 
-    db.collection("menu").add({ name, category, price, createdAt: Date.now() })
-      .then(() => { nameEl.value = ""; categoryEl.value = ""; priceEl.value = ""; })
+    db.collection("menu").add({ name, category, price, imageUrl, createdAt: Date.now() })
+      .then(() => { nameEl.value = ""; categoryEl.value = ""; priceEl.value = ""; imageEl.value = ""; })
       .catch(err => {
         errEl.textContent = "บันทึกไม่สำเร็จ: " + err.message;
         errEl.style.display = "block";
       });
   }
 
-  function editMenuItem(id, currentName, currentPrice, currentCategory) {
+  function editMenuItem(id, currentName, currentPrice, currentCategory, currentImage) {
     const name = prompt("ชื่อเมนู", currentName);
     if (name === null) return;
     const category = prompt("ประเภทอาหาร", currentCategory || "");
     if (category === null) return;
     const priceStr = prompt("ราคา", currentPrice);
     if (priceStr === null) return;
+    const imageUrl = prompt("ลิงก์รูปภาพ (เว้นว่างได้)", currentImage || "");
+    if (imageUrl === null) return;
     const price = parseFloat(priceStr);
     if (!name.trim() || isNaN(price) || price < 0) {
       alert("ข้อมูลไม่ถูกต้อง ยกเลิกการแก้ไข");
       return;
     }
-    db.collection("menu").doc(id).update({ name: name.trim(), category: category.trim(), price });
+    db.collection("menu").doc(id).update({ name: name.trim(), category: category.trim(), price, imageUrl: imageUrl.trim() });
   }
 
   function deleteMenuItem(id) {
