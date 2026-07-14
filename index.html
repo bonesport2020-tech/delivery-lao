@@ -28,9 +28,14 @@
   main { max-width: 720px; margin: 0 auto; padding: 24px; }
   h2 { font-family: 'Kanit', sans-serif; font-size: 18px; margin: 0 0 12px; }
 
-  .category-label { font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: 600; color: var(--chili); margin: 18px 0 8px; }
+  .cat-nav { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; margin-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .cat-nav a { flex-shrink: 0; font-family: 'Kanit', sans-serif; font-size: 13px; font-weight: 600; color: var(--chili); background: #fff; border: 1px solid var(--chili); padding: 6px 14px; border-radius: 999px; text-decoration: none; white-space: nowrap; }
+  .category-label { display: inline-block; font-family: 'Kanit', sans-serif; font-size: 13px; font-weight: 600; color: #fff; background: var(--chili); padding: 4px 14px; border-radius: 999px; margin: 20px 0 10px; scroll-margin-top: 12px; }
   .category-label:first-child { margin-top: 0; }
-  .menu-item { display: flex; align-items: center; justify-content: space-between; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .menu-item { display: flex; align-items: center; justify-content: space-between; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; gap: 10px; }
+  .menu-item .item-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .menu-item .thumb { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: var(--cream); }
+  .menu-item .thumb-placeholder { width: 56px; height: 56px; border-radius: 10px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
   .menu-item .name { font-weight: 500; font-size: 15px; }
   .menu-item .price { font-size: 13px; color: var(--ink-soft); }
 
@@ -71,6 +76,7 @@
 
 <main>
   <h2>เมนู</h2>
+  <div id="cat-nav" class="cat-nav"></div>
   <div id="menu-list"><div class="loading-note">กำลังโหลดเมนู...</div></div>
 
   <div class="cart-box">
@@ -84,7 +90,7 @@
     <input id="cust-name" type="text" placeholder="เช่น คุณสมชาย" />
 
     <label for="cust-phone">เบอร์โทรติดต่อ</label>
-    <input id="cust-phone" type="tel" placeholder="เช่น 0891234567" />
+    <input id="cust-phone" type="tel" placeholder="เช่น 02091234567" />
 
     <label for="cust-address">ที่อยู่จัดส่ง</label>
     <textarea id="cust-address" placeholder="บ้านเลขที่ ถนน ตำบล/แขวง..."></textarea>
@@ -128,8 +134,10 @@
 
   function renderMenu() {
     const el = document.getElementById("menu-list");
+    const navEl = document.getElementById("cat-nav");
     if (MENU.length === 0) {
       el.innerHTML = '<div class="empty-note">ร้านยังไม่ได้เพิ่มเมนู</div>';
+      navEl.innerHTML = "";
       return;
     }
     const groups = {};
@@ -137,13 +145,22 @@
       const cat = item.category || "เมนูอื่นๆ";
       (groups[cat] = groups[cat] || []).push(item);
     });
-    el.innerHTML = Object.keys(groups).map(cat => `
-      <div class="category-label">${escapeHtml(cat)}</div>
+    const catNames = Object.keys(groups);
+
+    navEl.innerHTML = catNames.map((cat, i) => `<a href="#cat-${i}">${escapeHtml(cat)}</a>`).join("");
+
+    el.innerHTML = catNames.map((cat, i) => `
+      <div class="category-label" id="cat-${i}">${escapeHtml(cat)}</div>
       ${groups[cat].map(item => `
         <div class="menu-item">
-          <div>
-            <div class="name">${escapeHtml(item.name)}</div>
-            <div class="price">${item.price}.-</div>
+          <div class="item-info">
+            ${item.imageUrl
+              ? `<img class="thumb" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'thumb-placeholder',textContent:'🍽️'}))" />`
+              : `<div class="thumb-placeholder">🍽️</div>`}
+            <div>
+              <div class="name">${escapeHtml(item.name)}</div>
+              <div class="price">${item.price}.-</div>
+            </div>
           </div>
           <div class="qty-control">
             <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
@@ -178,8 +195,8 @@
     `).join("") + `<div class="cart-total"><span>รวม</span><span>${total}.-</span></div>`;
   }
 
-  function toIntlPhone(thPhone) {
-    const digits = thPhone.replace(/\D/g, "");
+  function toIntlPhone(laoPhone) {
+    const digits = laoPhone.replace(/\D/g, "");
     return digits.startsWith("0") ? "856" + digits.slice(1) : digits;
   }
 
